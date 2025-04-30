@@ -1,29 +1,33 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller; 
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login'); // login.blade.php
+        return view('login'); // your login.blade.php
     }
 
     public function login(Request $request)
     {
-        // Add login logic here (validation, auth, redirect)
-    }
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-    public function showSignupForm()
-    {
-        return view('signup'); // signup.blade.php
-    }
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
 
-    public function signup(Request $request)
-    {
-        // Add signup logic here (validation, user creation, redirect)
+            // Redirect to query page
+            return redirect()->intended('/');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput();
     }
 }

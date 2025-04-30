@@ -4,20 +4,26 @@
     <meta charset="UTF-8">
     <title>Search | Premium Travel Guide</title>
     @vite('resources/css/app.css')
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.12.0/cdn.min.js" defer></script>
 </head>
-<body class="bg-gradient-to-br from-yellow-50 to-blue-100 font-sans text-gray-800 min-h-screen" x-data="{ showPaywall: false }">
+<body class="bg-[#e0f2fe] font-sans text-gray-800">
 
     <!-- Navigation Bar -->
-    <nav class="relative z-10 bg-orange-500 shadow-md py-5">
+    <nav class="relative z-10 bg-gradient-to-r from-[#7dd3fc] to-blue-500 shadow-md py-5">
         <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="text-white text-3xl font-extrabold tracking-wide">
+            <div class="text-[#1d4ed8] text-3xl font-extrabold tracking-wide">
                 <a href="/" class="flex items-center space-x-2">
-                    <span>🌎 Premium Travel Guide</span>
+                    <span>🏔️ Premium Travel Guide</span>
                 </a>
             </div>
             <div class="flex space-x-4">
-                <a href="/" class="bg-white text-orange-600 hover:bg-yellow-50 px-5 py-2 rounded-md font-semibold transition duration-300">Logout</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="bg-white text-orange-600 hover:bg-red-400 hover:text-white px-5 py-2 rounded-md font-semibold transition duration-300">
+                        Logout
+                    </button>
+                </form>
+                
             </div>
         </div>
     </nav>

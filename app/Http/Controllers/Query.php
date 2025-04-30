@@ -32,19 +32,24 @@ class Query extends Controller
     
             $results = $searchResponse->json()['query']['search'] ?? [];
     
-            $unsplashResponse = Http::get('https://api.unsplash.com/search/photos', [
-                'query' => $query,
-                'client_id' => 'yourid',
-                'per_page' => 6,
-            ]);
+            $unsplashAccessKey=config('services.unsplash.key');// Replace with your Unsplash access key
+
+        $unsplashResponse = Http::withHeaders([
+            'Authorization' => 'Client-ID ' . $unsplashAccessKey,
+        ])->get('https://api.unsplash.com/search/photos', [
+            'query' => $query,
+            'per_page' => 9,
+        ]);
+
+        $photos = $unsplashResponse->json()['results'] ?? [];
+
+        $imageUrls = [];
+
+        foreach ($photos as $photo) {
+            $imageUrls[] = $photo['urls']['regular'] ?? null;
+        }
     
-            $photos = $unsplashResponse->json()['results'] ?? [];
-    
-            foreach ($photos as $photo) {
-                $imageUrls[] = $photo['urls']['regular'];
-            }
-    
-            $geminiApiKey = 'AIzaSyCUj6Y8b2u0z2tA5dj0TtPwFqkxhZGlVCY';
+            $geminiApiKey = config('services.gemini.key');
             $geminiResponse = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$geminiApiKey}", [
